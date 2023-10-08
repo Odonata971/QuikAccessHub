@@ -1,0 +1,21 @@
+{
+  "templates": {
+    "1": {
+      "paths": [
+        "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
+        "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
+      ]
+    },
+    "2": {
+      "paths": [
+        "C:\\Users\\flori\\AppData\\Local\\Programs\\PhpStorm\\bin\\phpstorm64.exe"
+      ]
+    },
+    "3": {
+      "paths": [
+        "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
+        "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
+      ]
+    }
+  }
+}
