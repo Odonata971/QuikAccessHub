@@ -1,14 +1,14 @@
 {
   "templates": {
-    "1": {
+    "Work": {
       "paths": [
         "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
         "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
       ]
     },
-    "2": {
+    "Anime": {
       "paths": [
-        "C:\\Users\\flori\\AppData\\Local\\Programs\\PhpStorm\\bin\\phpstorm64.exe"
+        "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
       ]
     },
     "3": {
