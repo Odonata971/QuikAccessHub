@@ -8,6 +8,11 @@ class App(CTk):
         self.geometry("600x450")
         self.title("QuikAccessHub")
         templates = ["Work", "Anime", "Games", "Dev", "Music"]
+
+        self.titre = CTkLabel(self, text="QuikAccessHub", font=("Arial", 30))
+        self.titre.pack(padx=5, pady=5)
+
+        self.parameters = CTkButton(self,text="parameters")
         self.template_01 = CTkButton(self, text=templates[0], command=lambda: launch_applications(templates[0]))
         self.template_02 = CTkButton(self, text=templates[1], command=lambda: launch_applications(templates[1]))
         self.template_03 = CTkButton(self, text=templates[2], command=lambda: launch_applications(templates[2]))
