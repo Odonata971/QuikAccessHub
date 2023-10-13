@@ -13,6 +13,7 @@ class App(CTk):
         self.titre.pack(padx=5, pady=5)
 
         self.parameters = CTkButton(self,text="parameters")
+        self.parameters.pack(padx=5, pady=5)
         self.template_01 = CTkButton(self, text=templates[0], command=lambda: launch_applications(templates[0]))
         self.template_02 = CTkButton(self, text=templates[1], command=lambda: launch_applications(templates[1]))
         self.template_03 = CTkButton(self, text=templates[2], command=lambda: launch_applications(templates[2]))
