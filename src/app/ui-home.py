@@ -1,5 +1,6 @@
 from kernel import launch_applications
 from customtkinter import *
+import ui_config_page as config
 
 
 class App(CTk):
@@ -7,6 +8,7 @@ class App(CTk):
         super().__init__()
         self.geometry("600x450")
         self.title("QuikAccessHub")
+
         self.grid_rowconfigure(3, weight=1)  # configure grid system
         self.grid_columnconfigure(0, weight=1)
 
@@ -63,9 +65,9 @@ class TitleFrame(CTkFrame):
 class ConfigureTemplates(CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.grid_rowconfigure(0, weight=1)  # configure grid system
+        self.grid_rowconfigure(0, weight=1)  # configure grid syst:em
         self.grid_columnconfigure(2, weight=1)
-        self.configure_templates = CTkButton(self, text="Configure Templates", command=print("ok"),
+        self.configure_templates = CTkButton(self, text="Configure Templates", command=config.config_page,
                                              font=CTkFont(family="Bahnschrift", size=15))
         self.help = CTkButton(self, text="Help", command=print("help"), font=CTkFont(family="Bahnschrift", size=15))
         self.configure_templates.grid(row=0, column=0, padx=70, pady=10)
