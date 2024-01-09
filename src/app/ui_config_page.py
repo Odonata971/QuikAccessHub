@@ -1,4 +1,5 @@
 from customtkinter import *
+from kernel import *
 
 
 def config_page():
@@ -14,11 +15,14 @@ def config_page():
     window.grid_rowconfigure(3, weight=1)  # configure grid system
     window.grid_columnconfigure(0, weight=1)
 
-    add_config_button = CTkButton(window, text="Add a Config",font=CTkFont(family="Bahnschrift", size=15))
+    add_config_button = CTkButton(window, text="Work", font=CTkFont(family="Bahnschrift", size=15))
+
+    print(show_template(add_config_button.cget("text")))
+
     add_config_button.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
 
-
     window.mainloop()
+
 
 class ConfigurationFrame(CTkFrame):
     def __init__(self, master, **kwargs):
