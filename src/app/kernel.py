@@ -1,14 +1,25 @@
 import subprocess
 import json
 
-# Open and read the json file
-templates_file = "../json/templates.json"
-with open(templates_file, "r") as json_file:
-    templates_list = json.load(json_file)
+
+def get_template_list() -> dict:
+    # Open and read the json file
+    templates_file = "../json/templates.json"
+    with open(templates_file, "r") as json_file:
+        templates_list = json.load(json_file)
+        print(templates_list)
+    return templates_list
 
 
-# Launch the applications
+templates_list = get_template_list()
+
+
 def launch_applications(template_used: str):
+    """
+    Launch the applications of the template used
+    :param template_used: the name template used
+    """
+
     # Loop through the json file
     template_data = templates_list[template_used]
 
