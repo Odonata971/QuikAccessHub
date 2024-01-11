@@ -1,4 +1,5 @@
 from kernel import launch_applications
+from template_service import get_template_list
 from customtkinter import *
 import ui_config_page as config
 
@@ -25,31 +26,31 @@ class App(CTk):
 class TemplatesFrame(CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
+        self.templates = [] # list of buttons for each template
         self.grid_rowconfigure(6, weight=1)  # configure grid system
         self.grid_columnconfigure(0, weight=1)
 
-        templates = ["Work", "Anime", "Games", "Dev", "Music"]
+        # Get the list of templates
+        templates = get_template_list().keys()
+
         # add widgets onto the frame, for example:
         self.label = CTkLabel(self, text="Choose a template", font=CTkFont(family="Bahnschrift", size=20),
                               text_color="#353535")
-
-        self.template_01 = CTkButton(self, text=templates[0], command=lambda: launch_applications(templates[0]),
-                                     font=CTkFont(family="Bahnschrift", size=15))
-        self.template_02 = CTkButton(self, text=templates[1], command=lambda: launch_applications(templates[1]),
-                                     font=CTkFont(family="Bahnschrift", size=15))
-        self.template_03 = CTkButton(self, text=templates[2], command=lambda: launch_applications(templates[2]),
-                                     font=CTkFont(family="Bahnschrift", size=15))
-        self.template_04 = CTkButton(self, text=templates[3], command=lambda: launch_applications(templates[3]),
-                                     font=CTkFont(family="Bahnschrift", size=15))
-        self.template_05 = CTkButton(self, text=templates[4], command=lambda: launch_applications(templates[4]),
-                                     font=CTkFont(family="Bahnschrift", size=15))
+        if len(templates) == 0:
+            self.label = CTkLabel(self, text="No template found", font=CTkFont(family="Bahnschrift", size=20),
+                                  text_color="#353535")
+        # Create a button for each template
+        for template in templates:
+            # To avoid the problem of the button always taking the last value of template,
+            # we use a lambda function with a default argument
+            self.templates.append(CTkButton(self, text=template,
+                                            command=lambda template_used=template: launch_applications(template_used),
+                                            font=CTkFont(family="Bahnschrift", size=15)))
 
         self.label.grid(row=0, column=0, padx=20, pady=15)
-        self.template_01.grid(row=1, column=0, padx=20, pady=5)
-        self.template_02.grid(row=2, column=0, padx=20, pady=5)
-        self.template_03.grid(row=3, column=0, padx=20, pady=5)
-        self.template_04.grid(row=4, column=0, padx=20, pady=5)
-        self.template_05.grid(row=5, column=0, padx=20, pady=5)
+        # Grid the buttons
+        for i in range(len(self.templates)):
+            self.templates[i].grid(row=i + 1, column=0, padx=20, pady=5)
 
 
 class TitleFrame(CTkFrame):
@@ -74,6 +75,14 @@ class ConfigureTemplates(CTkFrame):
         self.help.grid(row=0, column=1, padx=45, pady=10)
 
 
-app = App()
-app.configure(fg_color="#D9D9D9")
-app.mainloop()
+if __name__ == "__main__":
+    # We check if the json file is present. If not, we create it blank
+    if not os.path.isfile("../json/templates.json"):
+        print("The json file is not present")
+        with open("../json/templates.json", "w") as json_file:
+            json_file.write("{}")
+
+    # Create the app
+    app = App()
+    app.configure(fg_color="#D9D9D9")
+    app.mainloop()

@@ -1,15 +1,5 @@
 import subprocess
-import json
-
-
-def get_template_list() -> dict:
-    # Open and read the json file
-    templates_file = "../json/templates.json"
-    with open(templates_file, "r") as json_file:
-        templates_list = json.load(json_file)
-        print(templates_list)
-    return templates_list
-
+from template_service import get_template_list
 
 templates_list = get_template_list()
 
