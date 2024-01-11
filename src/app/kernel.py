@@ -9,24 +9,26 @@ with open(templates_file, "r") as json_file:
 
 # Launch the applications
 def launch_applications(template_used: str):
-
     # Loop through the json file
     template_data = templates_list[template_used]
 
     for category in template_data:
 
-        try:
-            # open all the urls in the browser in tabs
-            if category == "browser":
-                browser_path = template_data[category]["path"]
-                urls_to_open = template_data[category]["urls"]
-                command = [browser_path] + [" --new-tab " + url for url in urls_to_open]
-                subprocess.Popen(command)
-                pass
+        # open all the urls in the browser in tabs
+        if category == "browser":
+            browser_path = template_data[category]["path"]
+            urls_to_open = template_data[category]["urls"]
+            command = [browser_path] + [" --new-tab " + url for url in urls_to_open]
 
+            try:
+                subprocess.Popen(command)
+            except FileNotFoundError as e:
+                print(browser_path + " not found")
+
+        else:
             # open all the remaining applications
             for j in range(len(template_data[category])):
-                subprocess.Popen(template_data[category][j])
-
-        except Exception as e:
-            print("non")
+                try:
+                    subprocess.Popen(template_data[category][j])
+                except FileNotFoundError as e:
+                    print(template_data[category][j] + " not found")
