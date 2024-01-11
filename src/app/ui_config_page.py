@@ -1,25 +1,46 @@
 from customtkinter import *
-from kernel import *
+from template_service import *
+
+
+def show_template(template_to_config: str):
+    print("Configuring template : " + template_to_config)
+    # Get the template data
+    template_data = get_info_template(template_to_config)
 
 
 def config_page():
     # Display an error message
     window = CTk()
     window.configure(fg_color="#D9D9D9")
+    window.title("QuikAccessHub - Config Page")
     window.title = TitleFrame(master=window, fg_color="#FFFFFF")
     window.title.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
 
     window.geometry("400x300")
     window.resizable(False, False)
 
-    window.grid_rowconfigure(3, weight=1)  # configure grid system
-    window.grid_columnconfigure(0, weight=1)
+    window.grid_columnconfigure(0, weight=1)  # configure grid system
 
-    add_config_button = CTkButton(window, text="Work", font=CTkFont(family="Bahnschrift", size=15))
+    # Get the list of templates
+    templates = get_template_list().keys()
+    templates_button = []  # list of buttons for each template
 
-    print(show_template(add_config_button.cget("text")))
+    if len(templates) == 0:
+        label = CTkLabel(window, text="No template found", font=CTkFont(family="Bahnschrift", size=20),
+                         text_color="#353535")
+        label.grid(row=1, column=0, padx=20, pady=15)
 
-    add_config_button.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
+    # Create a button for each template
+    for template in templates:
+        # To avoid the problem of the button always taking the last value of template,
+        # we use a lambda function with a default argument
+        templates_button.append(CTkButton(window, text=template,
+                                          command=lambda template_used=template: show_template(template_used),
+                                          font=CTkFont(family="Bahnschrift", size=15)))
+
+    # Grid the buttons
+    for i in range(len(templates_button)):
+        templates_button[i].grid(row=i + 1, column=0, padx=20, pady=10, sticky="nsew")
 
     window.mainloop()
 

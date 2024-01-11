@@ -23,7 +23,7 @@ def launch_applications(template_used: str):
 
             try:
                 subprocess.Popen(command)
-            except FileNotFoundError as e:
+            except FileNotFoundError:
                 print(browser_path + " not found")
 
         else:
@@ -31,5 +31,5 @@ def launch_applications(template_used: str):
             for j in range(len(template_data[category])):
                 try:
                     subprocess.Popen(template_data[category][j])
-                except FileNotFoundError as e:
+                except FileNotFoundError:
                     print(template_data[category][j] + " not found")

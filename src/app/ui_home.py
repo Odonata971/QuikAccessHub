@@ -26,7 +26,7 @@ class App(CTk):
 class TemplatesFrame(CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.templates = [] # list of buttons for each template
+        self.templates = []  # list of buttons for each template
         self.grid_rowconfigure(6, weight=1)  # configure grid system
         self.grid_columnconfigure(0, weight=1)
 
@@ -70,7 +70,8 @@ class ConfigureTemplates(CTkFrame):
         self.grid_columnconfigure(2, weight=1)
         self.configure_templates = CTkButton(self, text="Configure Templates", command=config.config_page,
                                              font=CTkFont(family="Bahnschrift", size=15))
-        self.help = CTkButton(self, text="Help", command=print("this is a button help"), font=CTkFont(family="Bahnschrift", size=15))
+        self.help = CTkButton(self, text="Help", command=print("this is a button help"),
+                              font=CTkFont(family="Bahnschrift", size=15))
         self.configure_templates.grid(row=0, column=0, padx=70, pady=10)
         self.help.grid(row=0, column=1, padx=45, pady=10)
 
