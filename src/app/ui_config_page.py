@@ -147,4 +147,4 @@ class App(CTkFrame):
         self.label_path_app.grid(row=1, column=0, padx=(10, 2), sticky="w")
         self.entry_path_app.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="ew")
 
-        # TODO Add a button to add an url
+        # TODO Add a button to add an app
