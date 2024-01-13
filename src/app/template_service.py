@@ -9,6 +9,13 @@ def get_template_list() -> dict:
     return templates_list
 
 
-def get_info_template(template_name: str) -> dict:
+def get_info_template(template_name: str) -> list[dict]:
     templates_list = get_template_list()
     return templates_list[template_name]
+
+
+def update_template(template_name: str, new_template: list[dict]):
+    templates_list = get_template_list()
+    templates_list[template_name] = new_template
+    with open("../json/templates.json", "w") as json_file:
+        json.dump(templates_list, json_file, indent=4)

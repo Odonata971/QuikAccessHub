@@ -1,48 +1,151 @@
 from os.path import basename
-
+from tkinter import PhotoImage
 from customtkinter import *
 from template_service import *
 from os import path
 
 
+class ConfigurationFrame(CTkFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+        self.grid_rowconfigure(6, weight=1)  # configure grid system
+        self.grid_columnconfigure(0, weight=1)
+
+
+class TitleFrame(CTkFrame):
+    def __init__(self, master, title: str, **kwargs):
+        super().__init__(master, **kwargs)
+        self.grid_rowconfigure(0, weight=1)  # configure grid system
+        self.grid_columnconfigure(0, weight=1)
+        self.title = CTkLabel(self, text=title, font=CTkFont(family="Bahnschrift", size=40, weight="bold"),
+                              text_color="#353535")
+        self.title.grid(row=0, column=0, padx=5, pady=5)
+
+
+class App(CTkFrame):
+    def __init__(self, master, app_path: str, tab_url=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self.tab_url = tab_url
+        self.app_path = app_path
+        self.app_path_SV: StringVar = StringVar()
+
+        self.grid_columnconfigure(0, weight=1)  # configure grid system
+
+        self.label_path_app = CTkLabel(self, text=get_application_name(app_path), fg_color="transparent",
+                                       text_color="#000")
+        self.entry_path_app = CTkEntry(self, placeholder_text="Chemin vers l'executable du navigateur",
+                                       text_color="#FFFFFF", textvariable=self.app_path_SV)
+        self.explorer_button = CTkButton(self, text="Explorer", command=lambda: self.open_explorer())
+        self.entry_path_app.insert(0, app_path)
+
+        if not path.exists(app_path):  # If the path doesn't exist we change the color of the text
+            self.label_path_app.configure(text_color="#FF0000")
+            self.entry_path_app.configure(text_color="#FF0000")
+        self.app_path_SV.trace("w", self.update())
+
+        self.label_path_app.grid(row=1, column=0, padx=(10, 2), sticky="w")
+        self.entry_path_app.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="ew")
+        self.explorer_button.grid(row=2, column=1, padx=10, pady=(0, 20), sticky="ew")
+
+        if tab_url is not None:
+            self.entry_url: list[CTkEntry] = []
+            self.label_url: list[CTkLabel] = []
+
+            for i in range(len(tab_url)):
+                self.label_url.append(CTkLabel(self, text="Url", fg_color="transparent", text_color="#000"))
+                self.entry_url.append(CTkEntry(self, text_color="#FFFFFF"))
+
+                self.entry_url[i].insert(0, tab_url[i])
+
+                self.label_url[i].grid(row=2 * i + 3, column=0, padx=10, sticky="w")
+                bottom_pading = 0
+                if i == len(tab_url) - 1:  # If it's the last url we add a bottom padding
+                    bottom_pading = 10
+                self.entry_url[i].grid(row=2 * i + 4, column=0, padx=10, pady=(0, bottom_pading), sticky="ew")
+
+            # TODO Add a button to add a new url
+
+    def get_data(self) -> dict:
+        data = {"path": self.entry_path_app.get()}
+        if self.tab_url is not None:
+            data["urls"] = [url.get() for url in self.entry_url]
+        return data
+
+    def open_explorer(self):
+        """
+        Open the explorer to choose a browser executable
+        """
+        file_path = filedialog.askopenfilename(initialdir="/", title="Selectionner un executable",
+                                               filetypes=(("executables", "*.exe"), ("all files", "*.*")))
+        if file_path != "":
+            self.entry_path_app.delete(0, END)
+            self.entry_path_app.insert(0, file_path)
+            if not path.exists(file_path):
+                self.label_path_app.configure(text_color="#FF0000")
+                self.entry_path_app.configure(text_color="#FF0000")
+            else:
+                self.label_path_app.configure(text_color="#000")
+                self.entry_path_app.configure(text_color="#FFFFFF")
+
+    def __str__(self):
+        if self.entry_path_app.get() == "":
+            return "App (empty)"
+        return "App " + get_application_name(self.entry_path_app.get())
+
+    def update(self):
+        self.app_path = self.entry_path_app.get()
+        self.label_path_app.configure(text=get_application_name(self.app_path))
+        if not path.exists(self.app_path):
+            self.label_path_app.configure(text_color="#FF0000")
+            self.entry_path_app.configure(text_color="#FF0000")
+        else:
+            self.label_path_app.configure(text_color="#000")
+            self.entry_path_app.configure(text_color="#FFFFFF")
+
+
+def add_app(scroll: CTkScrollableFrame, app: list[App | None]):
+    app.insert(0, App(master=scroll, app_path="", fg_color="#FFFFFF"))
+    for i in range(len(app)):
+        app[i].grid(row=i + 1, column=0, padx=20, pady=10, sticky="new")
+    pass
+
+
 def show_template(template_name: str):
     print("Configuring template : " + template_name)
     # Get the template data
-    template_data = get_info_template(template_name)
+    template_data: list[dict] = get_info_template(template_name)
+    app: list[App] = []
+
     window = CTk()
     window.configure(fg_color="#D9D9D9")
     window.title("QuikAccessHub - " + template_name)
-    window.geometry("600x500")
+    window.geometry("700x500")
     window.resizable(False, False)
     window.grid_columnconfigure(0, weight=1)  # configure grid system
-    window.grid_rowconfigure(2, weight=1)
+    window.grid_rowconfigure(3, weight=1)
 
     title = TitleFrame(master=window, fg_color="#FFFFFF", title="Config of " + template_name)
-    title.grid(row=0, column=0, padx=20, pady=10, sticky="new")
-
     scroll = CTkScrollableFrame(master=window, fg_color="transparent")
-    scroll.grid(row=2, column=0, padx=20, sticky="snew")
     scroll.grid_columnconfigure(0, weight=1)
-
-    browser_frame: Browser | None = None
-    app: list[App] = []
-
-    try:
-        browser_frame = Browser(master=scroll, browser_info=template_data["browser"], fg_color="#FFFFFF")
-        browser_frame.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
-    except KeyError:
-        pass
-
-    try:
-        for i in range(len(template_data["others"])):
-            app.append(App(master=scroll, app_path=template_data["others"][i], fg_color="#FFFFFF"))
-            app[i].grid(row=i + 2, column=0, padx=20, pady=10, sticky="ew")
-    except KeyError:
-        pass
-
     save_button = CTkButton(master=window, text="Sauvegarder",
-                            command=lambda: save_template(template_name, browser_frame, app))
+                            command=lambda: save_template(template_name, app, window))
+    add_app_button = CTkButton(master=window, text="Ajouter une application", command=lambda: add_app(scroll, app))
+
+    title.grid(row=0, column=0, padx=20, pady=10, sticky="new")
     save_button.grid(row=1, column=0, padx=20, pady=10, sticky="new")
+    add_app_button.grid(row=2, column=0, padx=20, pady=10, sticky="new")
+    scroll.grid(row=3, column=0, padx=20, sticky="snew")
+
+    for i in range(len(template_data)):
+        if "urls" in template_data[i]:
+            app.append(App(master=scroll, app_path=template_data[i]["path"], tab_url=template_data[i]["urls"],
+                           fg_color="#FFFFFF"))
+        else:
+            app.append(App(master=scroll, app_path=template_data[i]["path"], fg_color="#FFFFFF"))
+
+        app[i].grid(row=i, column=0, padx=20, pady=10, sticky="new")
+
+
 
     window.mainloop()
 
@@ -87,85 +190,10 @@ def get_application_name(executable_path: str) -> str:
     return os.path.splitext(os.path.basename(executable_path))[0]
 
 
-class ConfigurationFrame(CTkFrame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
-        self.grid_rowconfigure(6, weight=1)  # configure grid system
-        self.grid_columnconfigure(0, weight=1)
 
+def save_template(template_name: str, app: list[App | None], window: CTk):
+    print("Saving template : " + template_name)
+    new_template_data = [i.get_data() for i in app if i is not None]
+    update_template(template_name, new_template_data)
 
-class TitleFrame(CTkFrame):
-    def __init__(self, master, title: str, **kwargs):
-        super().__init__(master, **kwargs)
-        self.grid_rowconfigure(0, weight=1)  # configure grid system
-        self.grid_columnconfigure(0, weight=1)
-        self.title = CTkLabel(self, text=title, font=CTkFont(family="Bahnschrift", size=40, weight="bold"),
-                              text_color="#353535")
-        self.title.grid(row=0, column=0, padx=5, pady=5)
-
-
-class Browser(CTkFrame):
-    def __init__(self, master, browser_info: dict, **kwargs):
-        super().__init__(master, **kwargs)
-
-        self.grid_columnconfigure(0, weight=1)  # configure grid system
-
-        self.path_to_browser = StringVar()
-        self.label_path_browser = CTkLabel(self, text="Navigateur", fg_color="transparent", text_color="#000")
-        self.entry_path_browser = CTkEntry(self, placeholder_text="Chemin vers l'executable du navigateur",
-                                           textvariable=self.path_to_browser, text_color="#FFFFFF")
-        self.entry_path_browser.insert(0, browser_info["path"])
-        if not path.exists(browser_info["path"]):
-            self.label_path_browser.configure(text_color="#FF0000")
-            self.entry_path_browser.configure(text_color="#FF0000")
-
-        self.label_path_browser.grid(row=1, column=0, padx=(10, 2), sticky="w")
-        self.entry_path_browser.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="ew")
-
-        self.url: list[StringVar] = []
-        self.entry_url: list[CTkEntry] = []
-        self.label_url: list[CTkLabel] = []
-
-        for i in range(len(browser_info["urls"])):
-            self.url.append(StringVar())
-            self.label_url.append(CTkLabel(self, text="Url", fg_color="transparent", text_color="#000"))
-            self.entry_url.append(CTkEntry(self, textvariable=self.url[i], text_color="#FFFFFF"))
-            self.entry_url[i].insert(0, browser_info["urls"][i])
-
-            self.label_url[i].grid(row=2 * i + 3, column=0, padx=10, sticky="w")
-            bottom_pading = 0
-            if i == len(browser_info["urls"]) - 1:  # If it's the last url we add a bottom padding
-                bottom_pading = 10
-            self.entry_url[i].grid(row=2 * i + 4, column=0, padx=10, pady=(0, bottom_pading), sticky="ew")
-
-        # TODO Add a button to add a new url
-    # TODO add method to get the data
-
-
-class App(CTkFrame):
-    def __init__(self, master, app_path: str, **kwargs):
-        super().__init__(master, **kwargs)
-
-        self.grid_columnconfigure(0, weight=1)  # configure grid system
-
-        self.path_to_app = StringVar()
-        self.label_path_app = (CTkLabel(self, text=get_application_name(app_path), fg_color="transparent",
-                                        text_color="#000"))
-        self.entry_path_app = (CTkEntry(self, placeholder_text="Chemin vers l'executable du navigateur",
-                                        textvariable=self.path_to_app, text_color="#FFFFFF"))
-        (self.entry_path_app.insert(0, app_path))
-        if not path.exists(app_path):
-            self.label_path_app.configure(text_color="#FF0000")
-            self.entry_path_app.configure(text_color="#FF0000")
-
-        self.label_path_app.grid(row=1, column=0, padx=(10, 2), sticky="w")
-        self.entry_path_app.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="ew")
-
-        # TODO Add a button to add an app
-    # TODO add method to get the data
-
-
-def save_template(template_name: str, browser_frame: Browser | None, app: list[App | None]):
-    print("Saving template : ")
-
-    pass
+    window.destroy()  # Close the window
