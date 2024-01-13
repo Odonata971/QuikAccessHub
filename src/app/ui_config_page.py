@@ -25,7 +25,7 @@ def show_template(template_name: str):
     scroll.grid_columnconfigure(0, weight=1)
 
     browser_frame: Browser | None = None
-    app: list[App | None] = [None]
+    app: list[App] = []
 
     try:
         browser_frame = Browser(master=scroll, browser_info=template_data["browser"], fg_color="#FFFFFF")
