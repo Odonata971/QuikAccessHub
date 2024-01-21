@@ -1,4 +1,5 @@
 from kernel import launch_applications
+from src.app.component import TitleFrame
 from template_service import get_template_list
 from customtkinter import *
 import ui_config_page as config
@@ -13,7 +14,7 @@ class App(CTk):
         self.grid_rowconfigure(3, weight=1)  # configure grid system
         self.grid_columnconfigure(0, weight=1)
 
-        self.title = TitleFrame(master=self, fg_color="#FFFFFF")
+        self.title = TitleFrame(master=self,title="QuikAccessHub", fg_color="#FFFFFF")
         self.title.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
 
         self.templates = TemplatesFrame(master=self, fg_color="#FFFFFF")
@@ -51,16 +52,6 @@ class TemplatesFrame(CTkFrame):
         # Grid the buttons
         for i in range(len(self.templates)):
             self.templates[i].grid(row=i + 1, column=0, padx=20, pady=5)
-
-
-class TitleFrame(CTkFrame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
-        self.grid_rowconfigure(0, weight=1)  # configure grid system
-        self.grid_columnconfigure(0, weight=1)
-        self.title = CTkLabel(self, text="QuikAccessHub", font=CTkFont(family="Bahnschrift", size=40, weight="bold"),
-                              text_color="#353535")
-        self.title.grid(row=0, column=0, padx=5, pady=5)
 
 
 class ConfigureTemplates(CTkFrame):
