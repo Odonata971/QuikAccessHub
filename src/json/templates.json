@@ -43,5 +43,27 @@
         {
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
         }
+    ],
+    "5": [
+        {
+            "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
+            "urls": [
+                "https://github.com"
+            ]
+        },
+        {
+            "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+        }
+    ],
+    "6": [
+        {
+            "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
+            "urls": [
+                "https://github.com"
+            ]
+        },
+        {
+            "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+        }
     ]
 }

@@ -3,6 +3,7 @@ from src.app.component import *
 from src.app.template_service import *
 from src.app.ui_config_template import show_template
 
+
 def config_page():
     """
     Show the config page
