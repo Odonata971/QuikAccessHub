@@ -230,7 +230,8 @@ def get_application_name(executable_path: str) -> str:
     :param executable_path: the path to the executable (ex: C:/Program Files/Google/Chrome/chrome.exe)
     :return: the name of the application (ex: chrome)
     """
-    return os.path.splitext(os.path.basename(executable_path))[0]
+    app_name = os.path.splitext(os.path.basename(executable_path))[0]
+    return app_name.capitalize()
 
 
 def get_site_name(url: str) -> str:
@@ -239,7 +240,8 @@ def get_site_name(url: str) -> str:
     :param url: the url of the site (ex: https://www.google.com)
     :return: the name of the site (ex: google)
     """
-    return url.split("/")[2].split(".")[0]
+    site_name = url.split("/")[2].split(".")[0]
+    return site_name.capitalize()
 
 
 def save_template(template_name: str, app: list[App | None], window: CTk):
