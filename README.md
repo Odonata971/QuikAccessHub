@@ -1,9 +1,11 @@
 
 # QuikAccessHub
 
-A little .exe application that launches preconfigured templates according to the use you open your pc.
+A little .exe application that launches preconfigured templates according to the settings.
 
-It uses tkinter and customTkinter to display the ui. If you have any questions about it, find a bug or thought about an upgrade, feel free to contact me.
+It uses tkinter and customTkinter to display the ui. 
+
+If you have any questions about it, find a bug or thought about an upgrade, feel free to contact me.
 
 ## Features
 
