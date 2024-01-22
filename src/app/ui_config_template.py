@@ -18,7 +18,6 @@ class ConfigurationWindow(CTk):
         self.add_app_button = None
         self.save_button = None
         self.scroll = None
-        print("Configuring template : " + self.template_name)
         # Get the template data
         self.template_data: list[dict] = get_info_template(self.template_name)
         self.app: list[ApplicationFrame] = []
@@ -86,22 +85,21 @@ class ConfigurationWindow(CTk):
                 continue
             self.btn_delete.append(CTkButton(self.scroll, text="X", fg_color="#F00", width=1, hover_color="#C00",
                                              command=lambda index=i: self.delete_app(index)))
-            self.btn_delete[i].grid(row=i + 1, column=0, sticky="e")
+            self.btn_delete[i].grid(row=i + 1, column=0, pady=20, sticky="new")
             self.app[i].grid(row=i + 1, column=1, padx=20, pady=10, sticky="new")
 
     def save_template(self):
-        print("Saving template : " + self.template_name)
         new_template_data = [i.get_data() for i in self.app if i is not None]
         update_template(self.template_name, new_template_data)
         time.sleep(0.5)
         self.destroy()  # Close the window
 
     def delete_app(self, index: int):
-        print("Delete app n°" + str(index))
-
-        self.app[index].destroy()
-        self.app.pop(index)
-        self.show_app()
+        answer: bool = askyesno(title="Confirmation", message="Delete this app ?\n" + self.app[index].app_path_SV.get())
+        if answer:
+            self.app[index].destroy()
+            self.app.pop(index)
+            self.show_app()
 
 
 class ApplicationFrame(CTkFrame):
@@ -171,12 +169,9 @@ class ApplicationFrame(CTkFrame):
         }
         """
         if self.app_path_SV is not None:
-            print("Get data of " + self.app_path_SV.get(), end=" -> ")
             data = {"path": self.app_path_SV.get()}
             if self.tab_url is not None:
                 data["urls"] = [url.get() for url in self.url_SV]
-            print("Success")
-            print(data)
             return data
 
     def open_explorer(self):
@@ -229,8 +224,6 @@ class ApplicationFrame(CTkFrame):
             self.entry_path_app.configure(text_color="#FFFFFF")
 
     def delete_url(self, index):
-        print("Delete url n°" + str(index) + " -> " + self.url_SV[index].get())
-
         answer: bool = askyesno(title="Confirmation", message="Delete this url ?\n" + self.url_SV[index].get())
         if answer:
             self.url_SV.pop(index)
