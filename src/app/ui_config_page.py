@@ -1,7 +1,11 @@
 from customtkinter import *
+from customtkinter import CTk, CTkScrollableFrame, CTkButton
+
 from src.app.component import *
+from src.app.component import TitleFrame
 from src.app.template_service import *
-from src.app.ui_config_template import show_template
+from src.app.template_service import get_info_template
+from src.app.ui_config_template import ConfigurationWindow
 
 
 def config_page():
@@ -49,5 +53,16 @@ def config_page():
     # Grid the buttons
     for i in range(len(templates_button)):
         templates_button[i].grid(row=i, column=0, padx=20, pady=10, sticky="nsew")
+
+    window.mainloop()
+
+
+def show_template(template_name: str):
+    """
+    Show the template in a new window
+    Each app is a frame with a label and an entry where the user can modify the path to the executable
+    :param template_name: the name of the template to show
+    """
+    window = ConfigurationWindow(template_name)
 
     window.mainloop()

@@ -1,5 +1,4 @@
 import time
-from os.path import basename
 import tkinter as tk
 from customtkinter import *
 
@@ -7,16 +6,102 @@ from src.app.component import *
 from template_service import *
 from os import path
 from tkinter.messagebox import askyesno
-from PIL import Image
 
 CHANGE_MADE: bool = False
 
 
-class ConfigurationFrame(CTkFrame):
-    def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
-        self.grid_rowconfigure(6, weight=1)  # configure grid system
-        self.grid_columnconfigure(0, weight=1)
+class ConfigurationWindow(CTk):
+    def __init__(self, template_name, **kwargs):
+        super().__init__(**kwargs)
+        self.no_app = None
+        self.template_name = template_name
+        self.add_app_button = None
+        self.save_button = None
+        self.scroll = None
+        print("Configuring template : " + self.template_name)
+        # Get the template data
+        self.template_data: list[dict] = get_info_template(self.template_name)
+        self.app: list[ApplicationFrame] = []
+        self.btn_delete: list[CTkButton] = []
+
+        self.configure(fg_color="#D9D9D9")
+        self.title("QuikAccessHub - " + self.template_name)
+        self.geometry("700x500")
+        self.resizable(False, False)
+        self.grid_columnconfigure(0, weight=1)  # configure grid system
+        self.grid_rowconfigure(3, weight=1)
+
+        self.build_widget()
+
+        self.mainloop()
+
+    def build_widget(self):
+        global CHANGE_MADE
+        title = TitleFrame(master=self, fg_color="#FFFFFF", title="Config of " + self.template_name)
+        self.scroll = CTkScrollableFrame(master=self, fg_color="transparent")
+        self.save_button = CTkButton(master=self, text="Save", command=lambda: self.save_template())
+        self.add_app_button = CTkButton(master=self, text="Add an app", command=lambda: self.add_app(),
+                                        fg_color="#009400", hover_color="#007B00")
+        self.no_app = CTkLabel(self.scroll, text="Aucun template", font=CTkFont(family="Bahnschrift", size=20),
+                               text_color="#353535", fg_color="#FFFFFF")
+
+        self.scroll.grid_columnconfigure(1, weight=1)
+
+        title.grid(row=0, column=0, padx=20, pady=10, sticky="new")
+        self.save_button.grid(row=1, column=0, padx=20, pady=10, sticky="new")
+        self.add_app_button.grid(row=2, column=0, padx=20, pady=10, sticky="new")
+        self.scroll.grid(row=3, column=0, padx=20, sticky="snew")
+
+        CHANGE_MADE = False
+        self.create_app_widget()
+
+    def create_app_widget(self):
+        for i in range(len(self.template_data)):
+            if "urls" in self.template_data[i]:
+                self.app.append(ApplicationFrame(master=self.scroll, app_path=self.template_data[i]["path"],
+                                                 tab_url=self.template_data[i]["urls"], fg_color="#FFFFFF"))
+            else:
+                self.app.append(ApplicationFrame(master=self.scroll, app_path=self.template_data[i]["path"],
+                                                 fg_color="#FFFFFF"))
+        self.show_app()
+
+    def add_app(self):
+        self.app.insert(0, ApplicationFrame(master=self.scroll, app_path="", fg_color="#FFFFFF"))
+        self.show_app()
+
+    def show_app(self):
+
+        if len(self.app) == 0:
+            self.no_app.grid(row=0, column=0, padx=20, pady=10, sticky="new")
+        else:
+            self.no_app.grid_remove()
+
+        for btn in self.btn_delete:
+            btn.grid_remove()
+        self.btn_delete = []
+
+        for i in range(len(self.app)):
+            self.app[i].grid_remove()
+            if self.app[i] is None:
+                continue
+            self.btn_delete.append(CTkButton(self.scroll, text="X", fg_color="#F00", width=1, hover_color="#C00",
+                                             command=lambda index=i: self.delete_app(index)))
+            self.btn_delete[i].grid(row=i + 1, column=0, sticky="e")
+            self.app[i].grid(row=i + 1, column=1, padx=20, pady=10, sticky="new")
+
+    def save_template(self):
+        print("Saving template : " + self.template_name)
+        new_template_data = [i.get_data() for i in self.app if i is not None]
+        update_template(self.template_name, new_template_data)
+        time.sleep(0.5)
+        self.destroy()  # Close the window
+
+    def delete_app(self, index: int):
+        print("Delete app n°" + str(index))
+
+        self.app[index].destroy()
+        self.app.pop(index)
+        self.show_app()
 
 
 class ApplicationFrame(CTkFrame):
@@ -30,13 +115,10 @@ class ApplicationFrame(CTkFrame):
         self.grid_columnconfigure(1, weight=3)  # configure grid system
 
         self.label_path_app = CTkLabel(self, fg_color="transparent", text_color="#000")
-        self.btn_delete = CTkButton(self, text="X", fg_color="#F00", command=self.delete_app, width=1,
-                                    hover_color="#C00")
         self.entry_path_app = CTkEntry(self, text_color="#FFF", textvariable=self.app_path_SV)
         self.explorer_button = CTkButton(self, text="Browse", command=self.open_explorer)
 
         self.label_path_app.grid(row=1, column=1, padx=(10, 2), sticky="w")
-        self.btn_delete.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="e")
         self.entry_path_app.grid(row=2, column=1, padx=10, pady=(0, 20), sticky="ew")
         self.explorer_button.grid(row=2, column=2, padx=10, pady=(0, 20), sticky="ew")
 
@@ -88,7 +170,6 @@ class ApplicationFrame(CTkFrame):
             "urls": ["https://www.google.com", "https://www.youtube.com"]
         }
         """
-        # TODO handle when the app is destroyed
         if self.app_path_SV is not None:
             print("Get data of " + self.app_path_SV.get(), end=" -> ")
             data = {"path": self.app_path_SV.get()}
@@ -147,16 +228,6 @@ class ApplicationFrame(CTkFrame):
             self.label_path_app.configure(text_color="#000")
             self.entry_path_app.configure(text_color="#FFFFFF")
 
-    def delete_app(self):
-        print("Delete App " + self.app_path_SV.get())
-
-        answer: bool = askyesno(title="Confirmation",
-                                message="Delete this app ?\n" + self.app_path_SV.get())
-        if answer:
-            self.app_path_SV = None
-            self.url_SV = None
-            self.destroy()
-
     def delete_url(self, index):
         print("Delete url n°" + str(index) + " -> " + self.url_SV[index].get())
 
@@ -167,60 +238,6 @@ class ApplicationFrame(CTkFrame):
             self.btn_delete_url.pop(index)
             self.entry_url.pop(index)
         self.show_urls()
-
-
-def add_app(scroll: CTkScrollableFrame, app: list[ApplicationFrame | None]):
-    app.insert(0, ApplicationFrame(master=scroll, app_path="", fg_color="#FFFFFF"))
-    for i in range(len(app)):
-        app[i].grid(row=i + 1, column=0, padx=20, pady=10, sticky="new")
-    pass
-
-
-def show_template(template_name: str):
-    """
-    Show the template in a new window
-    Each app is a frame with a label and an entry where the user can modify the path to the executable
-    :param template_name: the name of the template to show
-    """
-    global CHANGE_MADE
-    print("Configuring template : " + template_name)
-    # Get the template data
-    template_data: list[dict] = get_info_template(template_name)
-    app: list[ApplicationFrame] = []
-
-    window = CTk()
-    window.configure(fg_color="#D9D9D9")
-    window.title("QuikAccessHub - " + template_name)
-    window.geometry("700x500")
-    window.resizable(False, False)
-    window.grid_columnconfigure(0, weight=1)  # configure grid system
-    window.grid_rowconfigure(3, weight=1)
-
-    title = TitleFrame(master=window, fg_color="#FFFFFF", title="Config of " + template_name)
-    scroll = CTkScrollableFrame(master=window, fg_color="transparent")
-    scroll.grid_columnconfigure(0, weight=1)
-    save_button = CTkButton(master=window, text="Save",
-                            command=lambda: save_template(template_name, app, window))
-    add_app_button = CTkButton(master=window, text="Add an app", command=lambda: add_app(scroll, app),
-                               fg_color="#009400", hover_color="#007B00",
-                               )
-
-    title.grid(row=0, column=0, padx=20, pady=10, sticky="new")
-    save_button.grid(row=1, column=0, padx=20, pady=10, sticky="new")
-    add_app_button.grid(row=2, column=0, padx=20, pady=10, sticky="new")
-    scroll.grid(row=3, column=0, padx=20, sticky="snew")
-
-    CHANGE_MADE = False
-    for i in range(len(template_data)):
-        if "urls" in template_data[i]:
-            app.append(ApplicationFrame(master=scroll, app_path=template_data[i]["path"],
-                                        tab_url=template_data[i]["urls"], fg_color="#FFFFFF"))
-        else:
-            app.append(ApplicationFrame(master=scroll, app_path=template_data[i]["path"], fg_color="#FFFFFF"))
-
-        app[i].grid(row=i, column=0, padx=0, pady=10, sticky="new")
-
-    window.mainloop()
 
 
 def get_application_name(executable_path: str) -> str:
@@ -239,11 +256,3 @@ def get_site_name(url: str) -> str:
     :return: the name of the site (ex: Google)
     """
     return url.split("/")[2].split(".")[0].capitalize()
-
-
-def save_template(template_name: str, app: list[ApplicationFrame | None], window: CTk):
-    print("Saving template : " + template_name)
-    new_template_data = [i.get_data() for i in app if i is not None]
-    update_template(template_name, new_template_data)
-    time.sleep(0.5)
-    window.destroy()  # Close the window
