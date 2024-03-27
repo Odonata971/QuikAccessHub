@@ -5,11 +5,18 @@
             "urls": [
                 "https://github.com/Francois389/",
                 "https://stackoverflow.com/",
-                "https://github.com"
+                "https://github.com",
+                "https://drive.google.com/drive/u/1/my-drive",
+                "",
+                ""
             ]
         },
         {
-            "path": "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe"
+            "path": "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe",
+            "urls": [
+                "https://stackoverflow.com/",
+                ""
+            ]
         },
         {
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
