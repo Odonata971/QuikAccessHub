@@ -1,33 +1,35 @@
 import subprocess
-import json
+from template_service import get_template_list
 
-# Open and read the json file
-templates_file = "../json/templates.json"
-with open(templates_file, "r") as json_file:
-    templates_list = json.load(json_file)
+templates_list = get_template_list()
 
 
-# Launch the applications
-def launch_applications(template_used: str):
-    print(templates_list)
+def launch_applications(template_name: str):
+    """
+    Launch the applications of the template used
+    :param template_name: the name template used
+    """
+
     # Loop through the json file
-    template_data = templates_list[template_used]
-    print(template_data)
-    for category in template_data:
-        print(category)
-        try:
-            # open all the urls in the browser in tabs
-            if category == "browser":
-                browser_path = template_data[category]["path"]
-                print(browser_path)
-                urls_to_open = template_data[category]["urls"]
-                command = [browser_path] + [" --new-tab " + url for url in urls_to_open]
+    template_data = templates_list[template_name]
+
+    for app in template_data:
+
+        # if the app is a browser, open the urls in tabs
+        # a browser is a special case because it has a list of urls
+        if "urls" in app:
+            browser_path = app["path"]
+            urls_to_open = app["urls"]
+            command = [browser_path] + [" --new-tab " + url for url in urls_to_open]
+
+            try:
                 subprocess.Popen(command)
-                pass
+            except FileNotFoundError:
+                print(browser_path + " not found")
 
-            # open all the remaining applications
-            for j in range(len(template_data[category])):
-                subprocess.Popen(template_data[category][j])
-
-        except Exception as e:
-            print("non")
+        # else, it's a normal app
+        else:
+            try:
+                subprocess.Popen(app["path"])
+            except FileNotFoundError:
+                print(app["path"] + " not found")
