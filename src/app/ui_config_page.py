@@ -1,11 +1,9 @@
-from customtkinter import *
 from customtkinter import CTk, CTkScrollableFrame, CTkButton
 
-from src.app.component import *
-from src.app.component import TitleFrame
-from src.app.template_service import *
-from src.app.template_service import get_info_template
-from src.app.ui_config_template import ConfigurationWindow
+from component import *
+from component import TitleFrame
+from template_service import *
+from ui_config_template import ConfigurationWindow
 
 
 def config_page():
@@ -30,11 +28,11 @@ def config_page():
     templates_button = []  # list of buttons for each template
 
     if len(templates) == 0:
-        label = CTkLabel(window, text="Aucun template", font=CTkFont(family="Bahnschrift", size=20),
+        label = CTkLabel(window, text="None templates found", font=CTkFont(family="Bahnschrift", size=20),
                          text_color="#353535", fg_color="#FFFFFF")
         label.grid(row=1, column=0, padx=20, pady=15)
     else:
-        label = CTkLabel(window, text="Choisissez un template à configurer", corner_radius=7,
+        label = CTkLabel(window, text="Choose your template to configure", corner_radius=7,
                          font=CTkFont(family="Bahnschrift", size=20), text_color="#353535", fg_color="#FFFFFF")
         label.grid(row=1, column=0, padx=20, pady=5, sticky="nsew")
 

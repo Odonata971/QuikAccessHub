@@ -1,8 +1,9 @@
 from kernel import launch_applications
-from src.app.component import TitleFrame
+from component import TitleFrame
 from template_service import get_template_list
 from customtkinter import *
 import ui_config_page as config
+import ui_help as help
 
 
 class App(CTk):
@@ -61,7 +62,7 @@ class ConfigureTemplates(CTkFrame):
         self.grid_columnconfigure(2, weight=1)
         self.configure_templates = CTkButton(self, text="Configure Templates", command=config.config_page,
                                              font=CTkFont(family="Bahnschrift", size=15))
-        self.help = CTkButton(self, text="Help", command=print("this is a button help"),
+        self.help = CTkButton(self, text="Help", command=help.ui_page,
                               font=CTkFont(family="Bahnschrift", size=15))
         self.configure_templates.grid(row=0, column=0, padx=70, pady=10)
         self.help.grid(row=0, column=1, padx=45, pady=10)
