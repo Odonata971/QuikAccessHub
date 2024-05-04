@@ -2,7 +2,7 @@ import time
 import tkinter as tk
 from customtkinter import *
 
-from src.app.component import *
+from component import *
 from template_service import *
 from os import path
 from tkinter.messagebox import askyesno

@@ -3,19 +3,17 @@
         {
             "path": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
             "urls": [
-                "https://github.com/Francois389/",
+                "https://github.com/",
                 "https://stackoverflow.com/",
                 "https://github.com",
-                "https://drive.google.com/drive/u/1/my-drive",
-                "",
+                "https://drive.google.com/",
                 ""
             ]
         },
         {
             "path": "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe",
             "urls": [
-                "https://stackoverflow.com/",
-                ""
+                "https://stackoverflow.com/"
             ]
         },
         {
@@ -26,7 +24,6 @@
         {
             "path": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
             "urls": [
-                "https://github.com/Odonata971/",
                 "https://stackoverflow.com/",
                 "https://github.com"
             ]
