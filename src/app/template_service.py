@@ -1,12 +1,12 @@
 import json
-
+import globals
 
 def get_template_list() -> dict:
     """
         Get the list of templates in the json file
     """
     # Open and read the json file
-    templates_file = "../json/templates.json"
+    templates_file = globals.json_path
     with open(templates_file, "r") as json_file:
         templates_list = json.load(json_file)
     return templates_list
@@ -29,5 +29,5 @@ def update_template(template_name: str, new_template: list[dict]):
     """
     templates_list = get_template_list()
     templates_list[template_name] = new_template
-    with open("../json/templates.json", "w") as json_file:
+    with open(globals.json_path, "w") as json_file:
         json.dump(templates_list, json_file, indent=4)

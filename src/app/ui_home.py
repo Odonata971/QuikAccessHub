@@ -4,11 +4,13 @@ from template_service import get_template_list
 from customtkinter import *
 import ui_config_page as config
 import ui_help as help
+import globals
 
 
 class App(CTk):
     def __init__(self):
         super().__init__()
+        self.iconbitmap(globals.logo_path)
         self.geometry("600x450")
         self.title("QuikAccessHub")
 
@@ -69,10 +71,11 @@ class ConfigureTemplates(CTkFrame):
 
 
 if __name__ == "__main__":
+
     # We check if the json file is present. If not, we create it blank
-    if not os.path.isfile("../json/templates.json"):
+    if not os.path.isfile(globals.json_path):
         print("The json file is not present")
-        with open("../json/templates.json", "w") as json_file:
+        with open(globals.json_path, "w") as json_file:
             json_file.write("{}")
 
     # Create the app
