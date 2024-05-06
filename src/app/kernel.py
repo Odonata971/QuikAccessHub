@@ -1,7 +1,7 @@
 import subprocess
 from template_service import get_template_list
 
-templates_list = get_template_list()
+templates_list = ""
 
 
 def launch_applications(template_name: str):
@@ -9,6 +9,10 @@ def launch_applications(template_name: str):
     Launch the applications of the template used
     :param template_name: the name template used
     """
+    global templates_list
+
+    # Reload the templates list every time this function is called
+    templates_list = get_template_list()
 
     # Loop through the json file
     template_data = templates_list[template_name]
