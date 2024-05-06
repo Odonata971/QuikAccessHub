@@ -51,7 +51,7 @@ class ConfigurationWindow(CTk):
         self.add_app_button = CTkButton(master=self, text="Add an app", command=lambda: self.add_app(),
                                         fg_color="#009400", hover_color="#007B00")
         self.no_app = CTkLabel(self.scroll, text="Aucun template", font=CTkFont(family="Bahnschrift", size=20),
-                               text_color="#353535", fg_color="#FFFFFF")
+                               text_color="#353535", fg_color="#D9D9D9")
 
         self.scroll.grid_columnconfigure(1, weight=1)
 
