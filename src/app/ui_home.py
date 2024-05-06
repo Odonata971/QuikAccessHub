@@ -62,7 +62,7 @@ class ConfigureTemplates(CTkFrame):
         super().__init__(master, **kwargs)
         self.grid_rowconfigure(0, weight=1)  # configure grid system
         self.grid_columnconfigure(2, weight=1)
-        self.configure_templates = CTkButton(self, text="Configure Templates", command=config.config_page,
+        self.configure_templates = CTkButton(self, text="Configure templates", command=config.config_page,
                                              font=CTkFont(family="Bahnschrift", size=15))
         self.help = CTkButton(self, text="Help", command=help.ui_page,
                               font=CTkFont(family="Bahnschrift", size=15))

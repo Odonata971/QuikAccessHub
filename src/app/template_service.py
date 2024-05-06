@@ -1,6 +1,7 @@
 import json
 import globals
 
+
 def get_template_list() -> dict:
     """
         Get the list of templates in the json file

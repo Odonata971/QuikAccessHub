@@ -62,5 +62,4 @@ def show_template(template_name: str):
     :param template_name: the name of the template to show
     """
     window = ConfigurationWindow(template_name)
-
     window.mainloop()
