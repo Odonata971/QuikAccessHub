@@ -17,7 +17,7 @@ def config_page():
     window.title = TitleFrame(master=window, fg_color="#FFFFFF", title="Configuration")
     window.title.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
 
-    window.geometry("400x300")
+    window.geometry("600x450")
     window.resizable(False, True)
 
     window.grid_columnconfigure(0, weight=1)  # configure grid system
