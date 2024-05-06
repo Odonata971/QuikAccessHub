@@ -1,13 +1,12 @@
 {
-    "Work": [
+    "Template 1": [
         {
             "path": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
             "urls": [
                 "https://github.com/",
                 "https://stackoverflow.com/",
                 "https://github.com",
-                "https://drive.google.com/",
-                ""
+                "https://drive.google.com/"
             ]
         },
         {
@@ -20,24 +19,27 @@
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
         }
     ],
-    "Anime": [
+    "Template 2": [
+        {
+            "path": "C:/Program Files/CCleaner/CCleaner.exe"
+        },
         {
             "path": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
             "urls": [
                 "https://stackoverflow.com/",
-                "https://github.com"
+                ""
             ]
+        }
+    ],
+    "Template 3": [
+        {
+            "path": "C:/Program Files/WinRAR/WinRAR.exe"
         },
         {
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
         }
     ],
-    "3": [
-        {
-            "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-        }
-    ],
-    "4": [
+    "Template 4": [
         {
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
             "urls": [
@@ -48,7 +50,7 @@
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
         }
     ],
-    "5": [
+    "Template 5": [
         {
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
             "urls": [
@@ -59,7 +61,7 @@
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
         }
     ],
-    "6": [
+    "Template 6": [
         {
             "path": "C:\\Users\\flori\\AppData\\Local\\Programs\\Opera GX\\launcher.exe",
             "urls": [

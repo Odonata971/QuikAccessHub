@@ -22,6 +22,8 @@ class ConfigurationWindow(CTk):
         self.add_app_button = None
         self.save_button = None
         self.scroll = None
+        self.actions_completed = False  # Flag to indicate whether the actions are completed
+
         # Get the template data
         self.template_data: list[dict] = get_info_template(self.template_name)
         self.app: list[ApplicationFrame] = []
@@ -29,7 +31,7 @@ class ConfigurationWindow(CTk):
 
         self.configure(fg_color="#D9D9D9")
         self.title("QuikAccessHub - " + self.template_name)
-        self.geometry("700x500")
+        self.geometry("600x450")
         self.resizable(False, False)
         self.grid_columnconfigure(0, weight=1)  # configure grid system
         self.grid_rowconfigure(3, weight=1)
@@ -95,8 +97,12 @@ class ConfigurationWindow(CTk):
     def save_template(self):
         new_template_data = [i.get_data() for i in self.app if i is not None]
         update_template(self.template_name, new_template_data)
-        time.sleep(0.5)
-        self.destroy()  # Close the window
+        self.actions_completed = True  # Set the flag to True after the actions are completed
+        self.after(500, self.check_actions_and_destroy)  # Check the actions and destroy the window after 0.5 seconds
+
+    def check_actions_and_destroy(self):
+        if self.actions_completed:  # If the actions are completed, destroy the window
+            super().destroy()
 
     def delete_app(self, index: int):
         answer: bool = askyesno(title="Confirmation", message="Delete this app ?\n" + self.app[index].app_path_SV.get())
