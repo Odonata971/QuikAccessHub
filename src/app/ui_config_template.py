@@ -1,9 +1,9 @@
 import time
 import tkinter as tk
 from customtkinter import *
-
 from component import *
 from template_service import *
+from utilities import *
 from os import path
 from tkinter.messagebox import askyesno
 
@@ -40,7 +40,10 @@ class ConfigurationWindow(CTk):
 
         self.mainloop()
 
-    def build_widget(self):
+    def build_widget(self) -> None:
+        """
+        Build the widgets in the window
+        """
         global CHANGE_MADE
         title = TitleFrame(master=self, fg_color="#FFFFFF", title="Config of " + self.template_name)
         self.scroll = CTkScrollableFrame(master=self, fg_color="transparent")
@@ -60,7 +63,10 @@ class ConfigurationWindow(CTk):
         CHANGE_MADE = False
         self.create_app_widget()
 
-    def create_app_widget(self):
+    def create_app_widget(self) -> None:
+        """
+        Create the app widgets in the window
+        """
         for i in range(len(self.template_data)):
             if "urls" in self.template_data[i]:
                 self.app.append(ApplicationFrame(master=self.scroll, app_path=self.template_data[i]["path"],
@@ -70,11 +76,17 @@ class ConfigurationWindow(CTk):
                                                  fg_color="#FFFFFF"))
         self.show_app()
 
-    def add_app(self):
+    def add_app(self) -> None:
+        """
+        Add an app to the list
+        """
         self.app.insert(0, ApplicationFrame(master=self.scroll, app_path="", fg_color="#FFFFFF"))
         self.show_app()
 
-    def show_app(self):
+    def show_app(self) -> None:
+        """
+        Show the apps in the window
+        """
 
         if len(self.app) == 0:
             self.no_app.grid(row=0, column=0, padx=20, pady=10, sticky="new")
@@ -94,26 +106,37 @@ class ConfigurationWindow(CTk):
             self.btn_delete[i].grid(row=i + 1, column=0, pady=20, sticky="new")
             self.app[i].grid(row=i + 1, column=1, padx=20, pady=10, sticky="new")
 
-    def save_template(self):
+    def save_template(self) -> None:
+        """
+        Save the template in the json file
+        """
         new_template_data = [i.get_data() for i in self.app if i is not None]
         update_template(self.template_name, new_template_data)
         self.actions_completed = True  # Set the flag to True after the actions are completed
         self.after(500, self.check_actions_and_destroy)  # Check the actions and destroy the window after 0.5 seconds
 
-    def check_actions_and_destroy(self):
+    def check_actions_and_destroy(self) -> None:
+        """
+        Check if the actions are completed and destroy the window
+        """
         if self.actions_completed:  # If the actions are completed, destroy the window
             super().destroy()
 
-    def delete_app(self, index: int):
+    def delete_app(self, index: int) -> None:
+        """
+        Delete an app from the list
+        :param index: the index of the app to delete
+        """
         answer: bool = askyesno(title="Confirmation", message="Delete this app ?\n" + self.app[index].app_path_SV.get())
         if answer:
             self.app[index].destroy()
             self.app.pop(index)
             self.show_app()
 
+
 class ApplicationFrame(CTkFrame):
     """
-    A frame to configure an application
+    The frame to configure an application
     """
 
     def __init__(self, master, app_path: str, tab_url=[], **kwargs):
@@ -136,12 +159,26 @@ class ApplicationFrame(CTkFrame):
 
         self.entry_url = None
         self.url_internet: list[str] = tab_url
+        # Check if the app is a browser
+        self.is_browser = is_browser(app_path)
 
-        if len(self.url_internet) != 0:
+        if self.is_browser and len(self.url_internet) != 0:
             self.add_url()
         else:
             self.add_entry_url = CTkButton(self, text="Add an url", command=lambda: self.add_url(from_user=True))
+            # Disable the button if the app is not a browser
+            if not self.is_browser:
+                self.add_entry_url.configure(state="disabled")
             self.add_entry_url.grid(row=3, column=1, padx=10, pady=(0, 20), sticky="ew")
+
+
+
+    def delete_url(self, index):
+        """
+        Delete the URL from the entry at the given index
+        """
+        self.entry_url[index].delete("0.0", "end")
+        self.delete_url_buttons[index].grid_remove()
 
     def get_data(self) -> dict:
         """
@@ -162,7 +199,7 @@ class ApplicationFrame(CTkFrame):
                         data["urls"].remove(url)
             return data
 
-    def open_explorer(self):
+    def open_explorer(self) -> None:
         """
         Open the explorer to choose a browser executable.
         If the user choose a file, the entry is updated with the path to the executable and we update the color
@@ -171,6 +208,11 @@ class ApplicationFrame(CTkFrame):
                                                filetypes=(("executables", "*.exe"), ("all files", "*.*")))
         if file_path != "":
             self.app_path_SV.set(file_path)
+            self.is_browser = is_browser(file_path)
+            if self.is_browser:
+                self.add_entry_url.configure(state="normal")
+            else:
+                self.add_entry_url.configure(state="disabled")
         self.update_app_path_label()
 
     def __str__(self):
@@ -178,7 +220,7 @@ class ApplicationFrame(CTkFrame):
             return "App (empty)"
         return "App " + get_application_name(self.entry_path_app.get())
 
-    def update_app_path_label(self, *args):
+    def update_app_path_label(self, *args) -> None:
         """
         Update the label and the entry color with the entry value
         """
@@ -188,7 +230,7 @@ class ApplicationFrame(CTkFrame):
         self.update_color(app_path)
         CHANGE_MADE = True
 
-    def update_color(self, app_path):
+    def update_color(self, app_path) -> None:
         """
         Update the label and the entry color with the entry value.
         If the path doesn't exist, the color is red.
@@ -201,11 +243,10 @@ class ApplicationFrame(CTkFrame):
             self.label_path_app.configure(text_color="#000")
             self.entry_path_app.configure(text_color="#FFFFFF")
 
-    def add_url(self, from_user=False):
+    def add_url(self, from_user=False) -> None:
         """
         Add the text area to enter an url
         :param from_user: if the user add an url or if it's from the template
-        :return:
         """
         if from_user:
             self.add_entry_url.grid_remove()
