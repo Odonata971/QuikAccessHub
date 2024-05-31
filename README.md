@@ -1,19 +1,22 @@
-
 # QuikAccessHub
 
-A little .exe application that launches preconfigured templates according to the settings.
+QuikAccessHub is a lightweight executable application that streamlines the launching of pre-configured templates based on user settings. It utilizes tkinter and customTkinter libraries for the user interface.
 
-It uses tkinter and customTkinter to display the ui. 
+## Reporting Issues
 
-If you have any questions about it, find a bug or thought about an upgrade, feel free to contact me.
+When reporting an issue, provide detailed information, including:
+- Steps to reproduce the issue
+- Error messages or logs
+- Any relevant context or screenshots
 
 ## Features
 
-- Launch multiples apps with one click
-- Quicker to begin your projects
-- User-adjustable
-- Possibility to make over 5 differents templates
-- Easy to use
+- Launch multiple applications with a single click
+- Quick access to pre-configured templates
+- Customizable settings
+- Create and store over five distinct templates
+- User-friendly interface
+
 ## Screenshots
 
-Soon...
+Visual representations of the application's interface will be available shortly.
